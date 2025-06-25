@@ -1,23 +1,47 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ------------------
+# Python & Flask
+# ------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+instance/
+*.db
+*.sqlite3
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# dotenv for secrets
+.env
 
-# testing
-/coverage
+# Jupyter & IPython (if used for ML modeling)
+.ipynb_checkpoints
 
-# production
-/build
+# ------------------
+# Node.js / React
+# ------------------
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env
 
-# misc
+# ------------------
+# OS / IDE specific
+# ------------------
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+Thumbs.db
+.vscode/
+.idea/
+*.log
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# ------------------
+# Kaggle / AI Datasets
+# ------------------
+*.zip
+*.tar.gz
+*.h5
+*.csv
+*.xls
+*.json
+datasets/
+models/
