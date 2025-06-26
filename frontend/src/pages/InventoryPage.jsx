@@ -5,7 +5,16 @@ import { getItems } from "../services/inventory";
 
 export default function InventoryPage() {
   const [items, setItems] = useState([]);
-  useEffect(() => { getItems().then(res => setItems(res.data)); }, []);
+ useEffect(() => {
+  getItems()
+    .then(res => {
+      console.log("Inventory response:", res);
+      setItems(res.data);
+    })
+    .catch(err => {
+      console.error("Inventory fetch failed:", err);
+    });
+}, []);
   return (
     <div>
       <Sidebar />

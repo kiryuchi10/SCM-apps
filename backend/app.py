@@ -11,11 +11,12 @@ from routes.inventory import inventory_bp
 from routes.orders import orders_bp
 from routes.ai import ai_bp
 
+
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 # Configuration from .env
 app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -37,6 +38,10 @@ app.register_blueprint(inventory_bp, url_prefix='/inventory')
 app.register_blueprint(orders_bp, url_prefix='/orders')
 app.register_blueprint(ai_bp, url_prefix='/ai')
 
+@app.route('/')
+def index():
+    return jsonify({"message": "Welcome to SCM-Core API"})
+
 # Health check endpoint
 @app.route('/health')
 def health_check():
@@ -54,5 +59,5 @@ def internal_error(error):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        print("✅ Database tables created successfully!")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+        print("Database tables created successfully!")
+    app.run(debug=True) #previously app.run(debug=True, host='0.0.0.0', port=5000) backend connection error

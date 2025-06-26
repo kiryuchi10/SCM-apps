@@ -1,33 +1,59 @@
+# backend/routes/orders.py
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from db import db
-from datetime import datetime
+from models.order import Order
+from models.user import User
+from utils.auth_decorators import jwt_required_with_user
+import uuid
 
-class Order(db.Model):
-    __tablename__ = 'orders'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    order_number = db.Column(db.String(100), unique=True, nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    status = db.Column(db.String(50), nullable=False, default='pending')  # pending, approved, shipped, delivered
-    requested_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    approved_by = db.Column(db.Integer, db.ForeignKey('users.id'))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
-    item = db.relationship('Item', backref='orders')
-    requester = db.relationship('User', foreign_keys=[requested_by], backref='requested_orders')
-    approver = db.relationship('User', foreign_keys=[approved_by], backref='approved_orders')
-    
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'order_number': self.order_number,
-            'item_id': self.item_id,
-            'quantity': self.quantity,
-            'status': self.status,
-            'requested_by': self.requested_by,
-            'approved_by': self.approved_by,
-            'created_at': self.created_at.isoformat(),
-            'updated_at': self.updated_at.isoformat()
-        }
+orders_bp = Blueprint('orders', __name__)
+
+@orders_bp.route('/', methods=['GET'])
+@jwt_required_with_user
+def get_orders(current_user):
+    orders = Order.query.filter_by(requested_by=current_user.id).all()
+    return jsonify([order.to_dict() for order in orders]), 200
+
+@orders_bp.route('/', methods=['POST'])
+@jwt_required_with_user
+def create_order(current_user):
+    data = request.get_json()
+
+    if not data.get('item_id') or not data.get('quantity'):
+        return jsonify({'error': 'Item ID and quantity are required'}), 400
+
+    order = Order(
+        order_number=str(uuid.uuid4()),
+        item_id=data['item_id'],
+        quantity=data['quantity'],
+        requested_by=current_user.id
+    )
+    db.session.add(order)
+    db.session.commit()
+
+    return jsonify({'message': 'Order created', 'order': order.to_dict()}), 201
+
+
+@orders_bp.route('/<int:order_id>', methods=['PUT'])
+@jwt_required_with_user
+def update_order(current_user, order_id):
+    order = Order.query.get_or_404(order_id)
+    data = request.get_json()
+
+    for field in ['quantity', 'status']:
+        if field in data:
+            setattr(order, field, data[field])
+
+    order.updated_at = db.func.now()
+    db.session.commit()
+    return jsonify({'message': 'Order updated', 'order': order.to_dict()}), 200
+
+
+@orders_bp.route('/<int:order_id>', methods=['DELETE'])
+@jwt_required_with_user
+def delete_order(current_user, order_id):
+    order = Order.query.get_or_404(order_id)
+    db.session.delete(order)
+    db.session.commit()
+    return jsonify({'message': 'Order deleted'}), 200

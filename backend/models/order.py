@@ -15,7 +15,7 @@ class Order(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationships
-    item = db.relationship('Item', backref='orders')
+    item = db.relationship('Item', backref='order')
     requester = db.relationship('User', foreign_keys=[requested_by], backref='requested_orders')
     approver = db.relationship('User', foreign_keys=[approved_by], backref='approved_orders')
     
