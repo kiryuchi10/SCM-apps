@@ -1,65 +1,204 @@
 import React, { useState } from "react";
-import { register } from "../services/auth";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import "./LoginPage.css"; // Reuse the same styles
 
 export default function SignupPage() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState(""); // For double entry
-  const [err, setErr] = useState("");
-  const [msg, setMsg] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    first_name: "",
+    last_name: "",
+    password: "",
+    confirmPassword: ""
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const handleSignup = async (e) => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
 
-    // Frontend double password check
-    if (password !== password2) {
-      setErr("Passwords do not match.");
+    // Validation
+    if (!formData.username || !formData.email || !formData.password) {
+      setError("Username, email, and password are required");
+      setLoading(false);
       return;
     }
-    if (!username || !email || !password) {
-      setErr("All fields are required.");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      setLoading(false);
       return;
     }
 
     try {
-      const res = await register(username, email, password);
-      setMsg("Signup successful! Please log in.");
-      setErr("");
-      setTimeout(() => navigate("/"), 1500);
-    } catch (error) {
-      // Print all error details in the console for debugging
-      console.error('Signup error:', error);
+      const result = await register({
+        username: formData.username,
+        email: formData.email,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        password: formData.password
+      });
 
-      if (error.response) {
-        // Server responded with error (most common)
-        setErr(error.response.data?.error || JSON.stringify(error.response.data));
-      } else if (error.request) {
-        // Request was made but no response
-        setErr("No response from server. Is the backend running?");
+      if (result.success) {
+        setSuccess("Account created successfully! Redirecting to login...");
+        setTimeout(() => navigate("/"), 2000);
       } else {
-        // Anything else (setup, etc)
-        setErr(error.message || "Signup failed");
+        setError(result.error);
       }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
     }
-
   };
 
   return (
-    <form onSubmit={handleSignup}>
-      <h2>Sign Up</h2>
-      <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="Username" />
-      <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" />
-      <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" />
-      <input type="password" value={password2} onChange={e=>setPassword2(e.target.value)} placeholder="Confirm Password" />
-      <button type="submit">Register</button>
-      <p>
-        Already have an account? <Link to="/">Login</Link>
-      </p>
-      {msg && <p style={{color:"green"}}>{msg}</p>}
-      {err && <p style={{color:"red"}}>{err}</p>}
-    </form>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
+          <h1 className="auth-title">SCM System</h1>
+          <h2 className="auth-subtitle">Create Account</h2>
+          <p className="auth-description">
+            Join our supply chain management platform
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="success-message">
+              {success}
+            </div>
+          )}
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="first_name">First Name</label>
+              <input
+                type="text"
+                id="first_name"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleChange}
+                placeholder="First name"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="last_name">Last Name</label>
+              <input
+                type="text"
+                id="last_name"
+                name="last_name"
+                value={formData.last_name}
+                onChange={handleChange}
+                placeholder="Last name"
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="username">Username *</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Choose a username"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email Address *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password *</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Create a password"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password *</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm your password"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="auth-button"
+            disabled={loading}
+          >
+            {loading ? <LoadingSpinner size="small" /> : "Create Account"}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            Already have an account?{" "}
+            <Link to="/" className="auth-link">
+              Sign in here
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

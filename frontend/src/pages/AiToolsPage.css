@@ -1,0 +1,113 @@
+/* pages/AiToolsPage.css */
+.ai-tools-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ai-tools-header {
+  margin-bottom: 2rem;
+}
+
+.ai-tools-title h2 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.ai-tools-title p {
+  margin: 0;
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.ai-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ai-tab {
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.ai-tab:hover {
+  border-color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.ai-tab.active {
+  border-color: #007bff;
+  background: #f8f9ff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.tab-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.tab-content {
+  flex: 1;
+}
+
+.tab-label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.tab-description {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.4;
+}
+
+.ai-tab-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  min-height: 600px;
+  overflow: hidden;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .ai-tabs {
+    grid-template-columns: 1fr;
+  }
+  
+  .ai-tab {
+    padding: 1rem;
+  }
+  
+  .tab-icon {
+    font-size: 1.5rem;
+  }
+  
+  .tab-label {
+    font-size: 1rem;
+  }
+  
+  .tab-description {
+    font-size: 0.85rem;
+  }
+  
+  .ai-tab-content {
+    min-height: 500px;
+  }
+}
