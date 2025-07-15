@@ -1,0 +1,260 @@
+/* components/inventory/InventoryTable.css */
+.inventory-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.inventory-table th {
+  background: #f8f9fa;
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.inventory-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: top;
+}
+
+.inventory-table tr:hover {
+  background: #f8f9fa;
+}
+
+/* Row status styling */
+.inventory-table tr.out-of-stock {
+  background: #fff5f5;
+}
+
+.inventory-table tr.low-stock {
+  background: #fffbf0;
+}
+
+.inventory-table tr.in-stock {
+  background: white;
+}
+
+/* Cell specific styling */
+.sku-cell {
+  font-family: monospace;
+  font-weight: 600;
+  color: #495057;
+}
+
+.name-cell {
+  min-width: 200px;
+}
+
+.item-name {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.item-description {
+  font-size: 0.8rem;
+  color: #666;
+  line-height: 1.3;
+}
+
+.quantity-cell {
+  text-align: center;
+  font-weight: 500;
+}
+
+.quantity-value {
+  font-size: 1rem;
+}
+
+.min-stock {
+  font-size: 0.75rem;
+  color: #666;
+  display: block;
+}
+
+.price-cell {
+  text-align: right;
+  font-weight: 500;
+  color: #28a745;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.in-stock {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.low-stock {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.out-of-stock {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Actions */
+.actions-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.actions-cell .btn {
+  margin: 0 0.25rem;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+}
+
+.pagination-info {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.pagination-ellipsis {
+  padding: 0.5rem;
+  color: #666;
+}
+
+/* No items state */
+.no-items {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #666;
+}
+
+.no-items p {
+  margin: 0.5rem 0;
+}
+
+/* Button styles */
+.btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+  border-color: #c82333;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-outline:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .inventory-table {
+    font-size: 0.8rem;
+  }
+  
+  .inventory-table th,
+  .inventory-table td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .name-cell {
+    min-width: 150px;
+  }
+  
+  .item-description {
+    display: none;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .pagination-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
