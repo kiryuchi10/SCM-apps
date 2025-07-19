@@ -1,0 +1,47 @@
+# ------------------
+# Python & Flask
+# ------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+instance/
+*.db
+*.sqlite3
+
+# dotenv for secrets
+.env
+
+# Jupyter & IPython (if used for ML modeling)
+.ipynb_checkpoints
+
+# ------------------
+# Node.js / React
+# ------------------
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env
+
+# ------------------
+# OS / IDE specific
+# ------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# ------------------
+# Kaggle / AI Datasets
+# ------------------
+*.zip
+*.tar.gz
+*.h5
+*.csv
+*.xls
+*.json
+datasets/
+models/
